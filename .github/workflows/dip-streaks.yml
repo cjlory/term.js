@@ -1,0 +1,21 @@
+name: dip-streaks
+on:
+  push:
+    branches: [ccr-faa98f4f-0u9bn5]
+    paths: [analysis/dip_streaks.py, .github/workflows/dip-streaks.yml]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  streaks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 analysis/dip_streaks.py | tee -a "$GITHUB_STEP_SUMMARY"
+      - run: |
+          git config user.name github-actions
+          git config user.email github-actions@users.noreply.github.com
+          git add analysis/results/dip_streaks.txt
+          git commit -m "Update dip streak results"
+          git pull --rebase origin ${GITHUB_REF_NAME}
+          git push

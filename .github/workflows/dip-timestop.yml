@@ -1,0 +1,22 @@
+name: dip-timestop
+on:
+  push:
+    branches: [ccr-faa98f4f-0u9bn5]
+    paths: [analysis/dip_timestop.py, .github/workflows/dip-timestop.yml]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  timestop:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install -q numpy numba
+      - run: python3 analysis/dip_timestop.py
+      - run: |
+          git config user.name github-actions
+          git config user.email github-actions@users.noreply.github.com
+          git add analysis/results/dip_timestop.csv
+          git commit -m "Update dip time-stop results"
+          git pull --rebase origin ${GITHUB_REF_NAME}
+          git push

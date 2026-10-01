@@ -1,0 +1,16 @@
+name: bald-candle-stats
+on:
+  push:
+    branches: [ccr-faa98f4f-0u9bn5]
+    paths: [analysis/**, .github/workflows/bald-candle.yml]
+  workflow_dispatch:
+jobs:
+  stats:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          for th in 0.001 0.002 0.0005; do
+            python3 analysis/bald_candle.py $th 24 | tee -a "$GITHUB_STEP_SUMMARY"
+            echo | tee -a "$GITHUB_STEP_SUMMARY"
+          done

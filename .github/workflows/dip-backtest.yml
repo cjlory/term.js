@@ -1,0 +1,12 @@
+name: dip-backtest
+on:
+  push:
+    branches: [ccr-faa98f4f-0u9bn5]
+    paths: [analysis/dip_backtest.py, .github/workflows/dip-backtest.yml]
+  workflow_dispatch:
+jobs:
+  backtest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 analysis/dip_backtest.py 0.0016 0.0016 0.018 2024-01 | tee -a "$GITHUB_STEP_SUMMARY"

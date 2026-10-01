@@ -1,0 +1,22 @@
+name: dip-sl-features
+on:
+  push:
+    branches: [ccr-faa98f4f-0u9bn5]
+    paths: [analysis/dip_sl_features.py, .github/workflows/dip-sl-features.yml]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  features:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install -q numpy
+      - run: python3 analysis/dip_sl_features.py
+      - run: |
+          git config user.name github-actions
+          git config user.email github-actions@users.noreply.github.com
+          git add analysis/results/dip_trades.csv
+          git commit -m "Update dip trade features"
+          git pull --rebase origin ${GITHUB_REF_NAME}
+          git push
